@@ -6,6 +6,8 @@ from fabric.api import put
 from fabric.api import run
 
 
+env.hosts = ['ubuntu@54.209.135.247', 'ubuntu@3.90.85.92']
+
 def do_deploy(archive_path):
     """Distributes an archive to a web server.
     Args:
@@ -22,7 +24,7 @@ def do_deploy(archive_path):
     if put(archive_path, "/tmp/{}/\
            ".format(myfile)).failed is True:
         return False
-    
+
     if run("mkdir -p /data/web_static/releases/{}/\
            ".format(name)).failed is True:
         return False
