@@ -66,7 +66,4 @@ def deploy():
     archive_path = do_pack()
     if os.path.isfile(archive_path) is False:
         return False
-    if do_deploy(archive_path) is True:
-        return True
-    else:
-        return False
+    return do_deploy(archive_path)
