@@ -1,26 +1,22 @@
 #!/usr/bin/env bash
 # Sets up my web servers for the deployment of web_static.
-apt-get update
-apt-get install -y nginx
+sudo apt-get update
+sudo apt-get install -y nginx
 
-mkdir -p /data/web_static/releases/test/
-mkdir -p /data/web_static/shared/
-echo '<html>
-  <head>
-  </head>
-  <body>
-    Hello, World!
-  </body>
-</html>' > /data/web_static/releases/test/index.html 
-ln -sf /data/web_static/releases/test/ /data/web_static/current 
+sudo mkdir -p /data/web_static/releases/test/
+sudo mkdir -p /data/web_static/shared/
 
-chown -R ubuntu /data/
-chgrp -R ubuntu /data/
+echo "Hello, World!" | sudo tee /data/web_static/releases/test/index.html
 
-printf %s "server {
+sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
+
+sudo chown -R ubuntu /data/
+sudo chgrp -R ubuntu /data/
+
+nginx_config="server {
 
     listen 80 default_server;
-    listen [::]:80 default server;
+    listen [::]:80 default_server;
     add_header X-Served-By $HOSTNAME;
     root /var/www/html;
     index index.html index.htm;
@@ -39,10 +35,12 @@ printf %s "server {
         root /var/www/html;
         internal;
     }
-}" > /etc/nginx/sites-available/default
+}"
 
-if [ "$(pgrep -c nginx)" -le 0 ]; then
-    service nginx start
-else 
-    service nginx restart
+echo "$nginx_config" | sudo tee /etc/nginx/sites-available/default
+
+if sudo nginx -t; then # Check Nginx configuration
+    sudo service nginx restart
+else
+    echo "nginx config failed!"
 fi
