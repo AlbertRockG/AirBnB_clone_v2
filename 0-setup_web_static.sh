@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 # Sets up my web servers for the deployment of web_static.
+apt-get update
+apt-get install -y nginx
+
 mkdir -p /data/web_static/releases/test/
 mkdir -p /data/web_static/shared/
 echo '<html>
@@ -8,8 +11,8 @@ echo '<html>
   <body>
     Hello, World!
   </body>
-</html>' > /data/web_static/releases/test/inded.html
-ln -sf /data/web_static/releases/test/ /data/web_static/current
+</html>' > /data/web_static/releases/test/index.html 
+ln -sf /data/web_static/releases/test/ /data/web_static/current 
 
 chown -R ubuntu /data/
 chgrp -R ubuntu /data/
