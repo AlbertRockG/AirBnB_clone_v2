@@ -15,14 +15,13 @@ sudo chgrp -R ubuntu /data/
 
 nginx_config="server {
 
-    listen 80 default_server;
-    listen [::]:80 default_server;
+    listen *:80 default_server;
     add_header X-Served-By $HOSTNAME;
     root /var/www/html;
     index index.html index.htm;
 
-    location /hbnb_static {
-        alias /data/web_static/current;
+    location /hbnb_static/ {
+        alias /data/web_static/current/;
         index index.html index.htm;
     }
 
@@ -37,10 +36,10 @@ nginx_config="server {
     }
 }"
 
-echo "$nginx_config" | sudo tee /etc/nginx/sites-available/default
-
+echo "$nginx_config" | sudo tee /etc/nginx/conf.d/default.conf
+sudo rm -rf /etc/nginx/sites-enabled/default
 if sudo nginx -t; then # Check Nginx configuration
-    sudo service nginx restart
+    sudo service nginx reload
 else
     echo "nginx config failed!"
 fi
